@@ -1,0 +1,16 @@
+# Disable directory browsing
+Options -Indexes
+
+# Prevent PHP execution in this directory for security
+<Files *.php>
+    deny from all
+</Files>
+
+# Enable CORS for image files
+<FilesMatch "\.(png|jpg|jpeg|gif|webp|svg|ico)$">
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+        Header set Access-Control-Allow-Headers "Origin, Content-Type"
+    </IfModule>
+</FilesMatch>

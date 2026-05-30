@@ -1,0 +1,13 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "bash admin-draft/start.sh"
+restartPolicyType = "ON_FAILURE"
+
+[[volumes]]
+name = "uploads"
+mount = "/app/admin-draft/microfin_web/uploads"
+
+[env]
+PHP_INI_SCAN_DIR = "/app/admin-draft/microfin_web"

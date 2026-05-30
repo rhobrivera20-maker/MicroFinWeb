@@ -1,0 +1,102 @@
+/**
+ * MicroFin Admin Tutorial Styles
+ * Custom styling for Shepherd.js tour tooltips
+ * Colors are dynamically injected via JavaScript based on tenant branding
+ */
+
+/* Shepherd modal overlay */
+.shepherd-modal-overlay-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+}
+
+/* Shepherd element container */
+.shepherd-element {
+    z-index: 99999;
+}
+
+/* Shepherd arrow */
+.shepherd-arrow {
+    border-width: 16px;
+}
+
+/* Shepherd content box */
+.shepherd-content {
+    max-width: 400px;
+    padding: 0;
+}
+
+/* Shepherd header */
+.shepherd-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Shepherd title */
+.shepherd-title {
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Shepherd cancel icon */
+.shepherd-cancel-icon {
+    cursor: pointer;
+    font-size: 24px;
+    padding: 4px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.shepherd-cancel-icon:hover {
+    opacity: 1;
+}
+
+/* Shepherd text/body */
+.shepherd-text {
+    padding: 20px;
+    font-size: 14px;
+}
+
+/* Shepherd footer with buttons */
+.shepherd-footer {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Shepherd buttons */
+.shepherd-button {
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.shepherd-button:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* Highlighted element styling */
+.shepherd-target {
+    position: relative;
+    z-index: 99998;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .shepherd-content {
+        max-width: 90vw;
+    }
+    
+    .shepherd-footer {
+        flex-direction: column;
+    }
+    
+    .shepherd-button {
+        width: 100%;
+    }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Earth & Stone",
+  "description": "Natural earth tones with stone textures and organic feel.",
+  "tier": "enterprise",
+  "sections": [
+    {
+      "id": "hero",
+      "label": "Hero Section",
+      "target": "sec_hero",
+      "default_state": true
+    },
+    {
+      "id": "services",
+      "label": "Services Section",
+      "target": "sec_services",
+      "default_state": true
+    },
+    {
+      "id": "calculator",
+      "label": "Loan Calculator Section",
+      "target": "sec_calc",
+      "default_state": true
+    },
+    {
+      "id": "stats",
+      "label": "Stats Section",
+      "target": "sec_stats",
+      "default_state": true
+    },
+    {
+      "id": "about",
+      "label": "About Section",
+      "target": "sec_about",
+      "default_state": true
+    },
+    {
+      "id": "download",
+      "label": "App Download Section",
+      "target": "sec_download",
+      "default_state": true
+    }
+  ]
+}

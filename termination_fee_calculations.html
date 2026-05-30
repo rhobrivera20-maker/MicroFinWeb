@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termination Fee Calculation Examples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        .scenario {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .scenario-header {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 15px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        .highlight {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        .summary {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+        }
+        .loan-details {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+        }
+        .fee-type {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #6c757d;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Termination Fee Calculation Examples</h1>
+        
+        <div class="loan-details">
+            <strong>Base Loan Details:</strong><br>
+            Principal: ₱1,000<br>
+            Interest Rate: 3% per month<br>
+            Term: 6 months<br>
+            Interest Type: Flat Rate<br>
+            Total Interest: ₱180 (₱30/month)<br>
+            Total Repayment: ₱1,180<br>
+            Monthly Amortization: ₱196.67
+        </div>
+
+        <!-- Scenario 1: Percentage -->
+        <div class="scenario">
+            <div class="scenario-header">
+                Scenario 1: Percentage Fee (5% of remaining balance)
+                <span class="fee-type">remaining_balance_pct</span>
+            </div>
+            <p><strong>Setup:</strong> Borrower pays off after 3 months (halfway through term)</p>
+            
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Payment Due</th>
+                    <th>Principal Paid</th>
+                    <th>Interest Paid</th>
+                    <th>Remaining Principal</th>
+                    <th>Remaining Balance</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱833.33</td>
+                    <td>₱983.33</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱666.66</td>
+                    <td>₱786.66</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱499.99</td>
+                    <td>₱589.99</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Early Settlement</strong></td>
+                    <td><strong>₱619.49</strong></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td><strong>₱499.99</strong></td>
+                    <td><strong>₱589.99</strong></td>
+                </tr>
+            </table>
+            
+            <div class="summary">
+                <strong>Step-by-Step Calculation:</strong><br><br>
+                <strong>Step 1: Calculate remaining balance after 3 months</strong><br>
+                Original principal: ₱1,000<br>
+                Principal paid (3 months × ₱166.67): ₱500.01<br>
+                Remaining principal: ₱1,000 - ₱500.01 = ₱499.99<br>
+                Unpaid interest (3 months × ₱30): ₱90.00<br>
+                <strong>Remaining Balance: ₱499.99 + ₱90.00 = ₱589.99</strong><br><br>
+                <strong>Step 2: Calculate termination fee (5% of remaining balance)</strong><br>
+                ₱589.99 × 0.05 = ₱29.50<br><br>
+                <strong>Step 3: Calculate total payoff amount</strong><br>
+                Remaining Balance (₱589.99) + Termination Fee (₱29.50) = <strong>₱619.49</strong>
+            </div>
+        </div>
+
+        <!-- Scenario 2: Fixed -->
+        <div class="scenario">
+            <div class="scenario-header">
+                Scenario 2: Fixed Fee (₱500 flat)
+                <span class="fee-type">fixed</span>
+            </div>
+            <p><strong>Setup:</strong> Same loan, borrower pays off after 3 months</p>
+            
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Payment Due</th>
+                    <th>Principal Paid</th>
+                    <th>Interest Paid</th>
+                    <th>Remaining Principal</th>
+                    <th>Remaining Balance</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱833.33</td>
+                    <td>₱983.33</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱666.66</td>
+                    <td>₱786.66</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱499.99</td>
+                    <td>₱589.99</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Early Settlement</strong></td>
+                    <td><strong>₱589.99</strong></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td><strong>₱499.99</strong></td>
+                    <td><strong>₱589.99</strong></td>
+                </tr>
+            </table>
+            
+            <div class="summary">
+                <strong>Step-by-Step Calculation:</strong><br><br>
+                <strong>Step 1: Calculate remaining balance after 3 months</strong><br>
+                Original principal: ₱1,000<br>
+                Principal paid (3 months × ₱166.67): ₱500.01<br>
+                Remaining principal: ₱1,000 - ₱500.01 = ₱499.99<br>
+                Unpaid interest (3 months × ₱30): ₱90.00<br>
+                <strong>Remaining Balance: ₱499.99 + ₱90.00 = ₱589.99</strong><br><br>
+                <strong>Step 2: Add fixed termination fee</strong><br>
+                Termination Fee: ₱500.00 (flat amount)<br><br>
+                <strong>Step 3: Calculate total payoff amount</strong><br>
+                Remaining Balance (₱589.99) + Termination Fee (₱500.00) = <strong>₱1,089.99</strong>
+            </div>
+        </div>
+
+        <!-- Scenario 3: Rebate Only -->
+        <div class="scenario">
+            <div class="scenario-header">
+                Scenario 3: Rebate Only (Rule of 78s)
+                <span class="fee-type">rebate_only</span>
+            </div>
+            <p><strong>Setup:</strong> Flat rate loan with Rule of 78s rebate - borrower pays off after 3 months</p>
+            
+            <div class="loan-details">
+                <strong>Rule of 78s Calculation (Step by Step):</strong><br><br>
+                <strong>Step 1: Calculate sum of digits for 6 months</strong><br>
+                6 + 5 + 4 + 3 + 2 + 1 = 21<br><br>
+                <strong>Step 2: Allocate interest to each month</strong><br>
+                - Month 1: 6/21 × ₱180 = ₱51.43<br>
+                - Month 2: 5/21 × ₱180 = ₱42.86<br>
+                - Month 3: 4/21 × ₱180 = ₱34.29<br>
+                - Month 4: 3/21 × ₱180 = ₱25.71<br>
+                - Month 5: 2/21 × ₱180 = ₱17.14<br>
+                - Month 6: 1/21 × ₱180 = ₱8.57<br>
+                Total: ₱180.00<br><br>
+                <strong>Step 3: Calculate earned interest (months 1-3)</strong><br>
+                ₱51.43 + ₱42.86 + ₱34.29 = ₱128.58<br><br>
+                <strong>Step 4: Calculate unearned interest (rebate)</strong><br>
+                Total interest (₱180) - Earned interest (₱128.58) = ₱51.42<br><br>
+                <strong>Why this is called "Rule of 78s":</strong><br>
+                The sum 6+5+4+3+2+1 = 21, but in a 12-month loan it would be 78 (12+11+10+...+1). The method front-loads interest so early payments have more interest than later payments.
+            </div>
+            
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Payment Due</th>
+                    <th>Principal Paid</th>
+                    <th>Interest Paid</th>
+                    <th>Remaining Principal</th>
+                    <th>Remaining Balance</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱833.33</td>
+                    <td>₱983.33</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱666.66</td>
+                    <td>₱786.66</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱499.99</td>
+                    <td>₱589.99</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Early Settlement</strong></td>
+                    <td><strong>₱538.56</strong></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td><strong>₱499.99</strong></td>
+                    <td><strong>₱589.99</strong></td>
+                </tr>
+            </table>
+            
+            <div class="summary">
+                <strong>Step-by-Step Calculation:</strong><br><br>
+                <strong>Step 1: Calculate remaining balance after 3 months</strong><br>
+                Original principal: ₱1,000<br>
+                Principal paid (3 months × ₱166.67): ₱500.01<br>
+                Remaining principal: ₱1,000 - ₱500.01 = ₱499.99<br>
+                Unpaid interest (3 months × ₱30): ₱90.00<br>
+                <strong>Remaining Balance: ₱499.99 + ₱90.00 = ₱589.99</strong><br><br>
+                <strong>Step 2: Calculate rebate (unearned interest)</strong><br>
+                From Rule of 78s above: Unearned interest = ₱51.42<br><br>
+                <strong>Step 3: Calculate total payoff amount</strong><br>
+                Remaining Balance (₱589.99) - Rebate (₱51.42) = <strong>₱538.57</strong><br><br>
+                <strong>Why subtract rebate?</strong><br>
+                The borrower doesn't owe interest for months 4-6 since they're paying early. The lender returns (rebates) this unearned interest.
+            </div>
+        </div>
+
+        <!-- Scenario 4: Rebate Plus Percentage -->
+        <div class="scenario">
+            <div class="scenario-header">
+                Scenario 4: Rebate Plus Percentage (Rule of 78s + 5% fee)
+                <span class="fee-type">rebate_plus_pct</span>
+            </div>
+            <p><strong>Setup:</strong> Apply rebate first, then charge 5% fee on the rebated amount</p>
+            
+            <div class="loan-details">
+                <strong>Step 1: Calculate Rebate (from Rule of 78s)</strong><br>
+                From Scenario 3 above: Unearned interest = ₱51.42<br><br>
+                <strong>Step 2: Calculate Rebated Amount</strong><br>
+                Remaining Balance (₱589.99) - Rebate (₱51.42) = ₱538.57<br><br>
+                <strong>What is Rebated Amount?</strong><br>
+                This is the amount the borrower would pay if there were NO additional fee. It's the remaining balance minus the unearned interest rebate.
+            </div>
+            
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Payment Due</th>
+                    <th>Principal Paid</th>
+                    <th>Interest Paid</th>
+                    <th>Remaining Principal</th>
+                    <th>Remaining Balance</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱833.33</td>
+                    <td>₱983.33</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱666.66</td>
+                    <td>₱786.66</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱499.99</td>
+                    <td>₱589.99</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Early Settlement</strong></td>
+                    <td><strong>₱565.49</strong></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td><strong>₱499.99</strong></td>
+                    <td><strong>₱589.99</strong></td>
+                </tr>
+            </table>
+            
+            <div class="summary">
+                <strong>Step-by-Step Calculation:</strong><br><br>
+                <strong>Step 1: Calculate remaining balance after 3 months</strong><br>
+                Remaining Balance: ₱589.99 (from previous scenarios)<br><br>
+                <strong>Step 2: Calculate rebate (unearned interest)</strong><br>
+                From Rule of 78s: Unearned interest = ₱51.42<br><br>
+                <strong>Step 3: Calculate rebated amount</strong><br>
+                Remaining Balance (₱589.99) - Rebate (₱51.42) = ₱538.57<br><br>
+                <strong>Step 4: Calculate termination fee (5% of rebated amount)</strong><br>
+                ₱538.57 × 0.05 = ₱26.93<br><br>
+                <strong>Step 5: Calculate total payoff amount</strong><br>
+                Rebated Amount (₱538.57) + Termination Fee (₱26.93) = <strong>₱565.50</strong><br><br>
+                <strong>Why calculate fee on rebated amount?</strong><br>
+                This is more borrower-friendly. The fee is calculated AFTER the rebate is applied, so the fee is smaller.
+            </div>
+        </div>
+
+        <!-- Scenario 5: Rebate Plus Fixed -->
+        <div class="scenario">
+            <div class="scenario-header">
+                Scenario 5: Rebate Plus Fixed (Rule of 78s + ₱500 fee)
+                <span class="fee-type">rebate_plus_fixed</span>
+            </div>
+            <p><strong>Setup:</strong> Apply rebate first, then charge ₱500 fixed fee</p>
+            
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Payment Due</th>
+                    <th>Principal Paid</th>
+                    <th>Interest Paid</th>
+                    <th>Remaining Principal</th>
+                    <th>Remaining Balance</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱833.33</td>
+                    <td>₱983.33</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱666.66</td>
+                    <td>₱786.66</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱499.99</td>
+                    <td>₱589.99</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Early Settlement</strong></td>
+                    <td><strong>₱1,038.56</strong></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td><strong>₱499.99</strong></td>
+                    <td><strong>₱589.99</strong></td>
+                </tr>
+            </table>
+            
+            <div class="summary">
+                <strong>Step-by-Step Calculation:</strong><br><br>
+                <strong>Step 1: Calculate remaining balance after 3 months</strong><br>
+                Remaining Balance: ₱589.99 (from previous scenarios)<br><br>
+                <strong>Step 2: Calculate rebate (unearned interest)</strong><br>
+                From Rule of 78s: Unearned interest = ₱51.42<br><br>
+                <strong>Step 3: Calculate rebated amount</strong><br>
+                Remaining Balance (₱589.99) - Rebate (₱51.42) = ₱538.57<br><br>
+                <strong>Step 4: Add fixed termination fee</strong><br>
+                Termination Fee: ₱500.00 (flat amount)<br><br>
+                <strong>Step 5: Calculate total payoff amount</strong><br>
+                Rebated Amount (₱538.57) + Termination Fee (₱500.00) = <strong>₱1,038.57</strong>
+            </div>
+        </div>
+
+        <!-- Scenario 6: No Early Settlement -->
+        <div class="scenario">
+            <div class="scenario-header">
+                Scenario 6: No Early Settlement Changes
+                <span class="fee-type">no_early_settlement_changes</span>
+            </div>
+            <p><strong>Setup:</strong> Borrower must pay all remaining scheduled payments regardless of early payoff</p>
+            
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Payment Due</th>
+                    <th>Principal Paid</th>
+                    <th>Interest Paid</th>
+                    <th>Remaining Principal</th>
+                    <th>Remaining Balance</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱833.33</td>
+                    <td>₱833.33</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱666.66</td>
+                    <td>₱666.66</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱499.99</td>
+                    <td>₱499.99</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>4 (Remaining)</strong></td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱333.32</td>
+                    <td>₱333.32</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>5 (Remaining)</strong></td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱166.65</td>
+                    <td>₱166.65</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>6 (Remaining)</strong></td>
+                    <td>₱196.67</td>
+                    <td>₱166.67</td>
+                    <td>₱30.00</td>
+                    <td>₱-0.02</td>
+                    <td>₱-0.02</td>
+                </tr>
+            </table>
+            
+            <div class="summary">
+                <strong>Step-by-Step Calculation:</strong><br><br>
+                <strong>Step 1: Calculate remaining scheduled payments</strong><br>
+                Months remaining: 3 (months 4, 5, 6)<br>
+                Monthly payment: ₱196.67<br>
+                Remaining payments: 3 × ₱196.67 = ₱590.01<br><br>
+                <strong>Step 2: No rebate, no fee adjustment</strong><br>
+                This option means the borrower must pay the full remaining schedule regardless of early payoff.<br><br>
+                <strong>Total Payoff Amount: ₱590.01 (full remaining schedule)</strong><br><br>
+                <strong>Why would someone choose this?</strong><br>
+                This is the baseline option. The lender gets all the remaining interest even if paid early. It's the most lender-friendly option.
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <h2>Comparison Summary</h2>
+        <table>
+            <tr>
+                <th>Fee Type</th>
+                <th>Remaining Principal</th>
+                <th>Remaining Balance</th>
+                <th>Rebate</th>
+                <th>Fee</th>
+                <th>Total Payoff</th>
+                <th>Savings vs No Early Settlement</th>
+            </tr>
+            <tr>
+                <td>Percentage (5%)</td>
+                <td>₱499.99</td>
+                <td>₱589.99</td>
+                <td>₱0.00</td>
+                <td>₱29.50</td>
+                <td><strong>₱619.49</strong></td>
+                <td>₱29.52</td>
+            </tr>
+            <tr>
+                <td>Fixed (₱500)</td>
+                <td>₱499.99</td>
+                <td>₱589.99</td>
+                <td>₱0.00</td>
+                <td>₱500.00</td>
+                <td><strong>₱1,089.99</strong></td>
+                <td>-₱499.98</td>
+            </tr>
+            <tr>
+                <td>Rebate Only</td>
+                <td>₱499.99</td>
+                <td>₱589.99</td>
+                <td>₱51.43</td>
+                <td>₱0.00</td>
+                <td><strong>₱538.56</strong></td>
+                <td>₱51.45</td>
+            </tr>
+            <tr>
+                <td>Rebate + Pct (5%)</td>
+                <td>₱499.99</td>
+                <td>₱589.99</td>
+                <td>₱51.43</td>
+                <td>₱26.93</td>
+                <td><strong>₱565.49</strong></td>
+                <td>₱24.52</td>
+            </tr>
+            <tr>
+                <td>Rebate + Fixed (₱500)</td>
+                <td>₱499.99</td>
+                <td>₱589.99</td>
+                <td>₱51.43</td>
+                <td>₱500.00</td>
+                <td><strong>₱1,038.56</strong></td>
+                <td>-₱448.55</td>
+            </tr>
+            <tr>
+                <td>No Early Settlement</td>
+                <td>₱499.99</td>
+                <td>₱589.99</td>
+                <td>₱0.00</td>
+                <td>₱0.00</td>
+                <td><strong>₱590.01</strong></td>
+                <td>₱0.00</td>
+            </tr>
+        </table>
+
+        <div class="loan-details" style="margin-top: 30px;">
+            <strong>Key Takeaways:</strong><br>
+            • <strong>Rebate Only</strong> is most borrower-friendly (saves ₱51.45)<br>
+            • <strong>Percentage (5%)</strong> costs slightly more than regular payments (penalty of ₱29.52)<br>
+            • <strong>Fixed (₱500)</strong> costs significantly MORE than regular payments (penalty of ₱499.98)<br>
+            • <strong>Rebate + Fee</strong> options give borrowers some benefit while still charging a penalty<br>
+            • <strong>No Early Settlement</strong> is baseline (borrower pays full remaining schedule)
+        </div>
+    </div>
+</body>
+</html>

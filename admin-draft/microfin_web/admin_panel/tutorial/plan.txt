@@ -1,0 +1,32 @@
+Tutorial Hover Feature Plan
+===========================
+
+Overview:
+Add an interactive, guided tutorial that hovers over elements when a new user first logs into a tenant, assuming they have not yet completed their setup (e.g., `setup_completed != 1`).
+
+Phase 1: Database & State Management
+------------------------------------
+- Check the `setup_completed` flag in the `tenants` table (or potentially a new `tutorial_completed` flag in the `users` table if the tutorial is per-user rather than per-tenant).
+- If the flag is not set (e.g., 0 or NULL), inject a JavaScript flag into the admin dashboard session (e.g., `<script>window.startTutorial = true;</script>`).
+- Add an endpoint (e.g., `tutorial/complete_tutorial.php`) via AJAX that updates the database flag once the user finishes or skips the tutorial.
+
+Phase 2: Frontend UI & Library Selection
+----------------------------------------
+- Choose a lightweight JS library for onboarding tours (e.g., Shepherd.js, Intro.js, or a custom lightweight vanilla JS implementation).
+- Since MicroFin has a rich, modern aesthetic, the tutorial tooltips should match the branding (using the dynamically generated `theme_primary_color` and `font_family`).
+- Add a transparent dark overlay to focus the user's attention on specific highlighted elements (like the sidebar, the top nav, the main dashboard stats).
+
+Phase 3: Defining the Tour Steps
+--------------------------------
+1. **Welcome Message (Center Screen)**: "Welcome to MicroFin! Let's take a quick tour."
+2. **Sidebar Navigation**: Highlight the left sidebar. "Access your modules, staff, and reports here."
+3. **Settings / Profile**: Highlight the top-right profile icon. "Manage your profile and organization settings here."
+4. **Action Buttons**: Highlight the main CTA on the dashboard (e.g., "Add Client" or "New Loan").
+5. **Completion**: "You're all set!" with a button to end the tour and mark it as complete in the database.
+
+Phase 4: Implementation Steps
+-----------------------------
+1. Create `tutorial.js` and `tutorial.css` in this folder.
+2. Include these scripts in `admin.php` conditionally based on the user's/tenant's setup status.
+3. Add `data-tutorial-step="X"` attributes to the relevant HTML elements in `admin.php` so the JS script can anchor the tooltips to them.
+4. Implement the AJAX call to mark the tutorial as completed so it doesn't run again on the next page refresh.

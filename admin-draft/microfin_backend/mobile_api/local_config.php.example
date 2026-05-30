@@ -1,0 +1,17 @@
+<?php
+
+// Local configuration example
+// For Railway deployment, use environment variables instead:
+// BREVO_API_KEY, BREVO_SENDER_EMAIL, BREVO_SENDER_NAME, BREVO_SANDBOX_MODE, APP_BASE_URL
+// PAYMONGO_SECRET_KEY, PAYMONGO_PUBLIC_KEY, APP_SECRET_KEY
+
+return [
+    'APP_BASE_URL' => getenv('APP_BASE_URL') ?: 'http://localhost/admin-draft',
+    'BREVO_API_KEY' => getenv('BREVO_API_KEY') ?: 'YOUR_BREVO_API_KEY_HERE',
+    'BREVO_SENDER_EMAIL' => getenv('BREVO_SENDER_EMAIL') ?: 'microfin.statements@gmail.com',
+    'BREVO_SENDER_NAME' => getenv('BREVO_SENDER_NAME') ?: 'MicroFin',
+    'BREVO_SANDBOX_MODE' => getenv('BREVO_SANDBOX_MODE') !== false ? filter_var(getenv('BREVO_SANDBOX_MODE'), FILTER_VALIDATE_BOOLEAN) : false,
+    'PAYMONGO_SECRET_KEY' => getenv('PAYMONGO_SECRET_KEY') ?: 'YOUR_PAYMONGO_SECRET_KEY',
+    'PAYMONGO_PUBLIC_KEY' => getenv('PAYMONGO_PUBLIC_KEY') ?: 'YOUR_PAYMONGO_PUBLIC_KEY',
+    'APP_SECRET_KEY' => getenv('APP_SECRET_KEY') ?: 'microfin-default-secret-key-change-me',
+];
