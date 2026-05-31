@@ -150,12 +150,19 @@ try {
         'body_html' => mf_email_panel(
             'Access Details',
             mf_email_detail_table([
-                ['label' => 'Login URL', 'value' => "<a href='{$safe_login_url}' style='color: #1d4ed8; text-decoration: none;'>{$safe_login_url}</a>", 'html' => true],
                 ['label' => 'Username', 'value' => "<code style='display: inline-block; padding: 4px 8px; background: #f8fafc; border: 1px solid #dbe4ee; border-radius: 8px; font-size: 15px; color: #0f172a;'>{$safe_username}</code>", 'html' => true],
                 ['label' => 'Temporary password', 'value' => "<code style='display: inline-block; padding: 4px 8px; background: #f8fafc; border: 1px solid #dbe4ee; border-radius: 8px; font-size: 15px; color: #0f172a;'>{$safe_temp_password}</code>", 'html' => true],
             ]),
             'info'
         ) . "
+            <table role='presentation' cellspacing='0' cellpadding='0' border='0' style='margin: 24px 0;'>
+                <tr>
+                    <td style='border-radius: 8px; background: #2563eb;'>
+                        <a href='{$safe_login_url}' style='background: #2563eb; border: 1px solid #2563eb; border-radius: 8px; color: #ffffff; display: inline-block; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold; line-height: 1.5; padding: 12px 24px; text-align: center; text-decoration: none; width: 100%;'>Login to Your Account</a>
+                    </td>
+                </tr>
+            </table>
+        " . "
             <p style='margin: 0; font-family: Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #334155;'>
                 You will be required to change this password on your first login.
             </p>
